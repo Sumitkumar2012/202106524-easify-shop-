@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shop</title>
+    <link rel="stylesheet" href="../styles/shop.css">
+    <script>
+         function displaytop(){
+            console.log("on Clicked");
+            document.getElementById('ontop').style.display='flex';
+            document.getElementById('ontop').style.flexDirection='row';
+            document.getElementById('ontop').style.justifyContent='space-between';
+        }
+        function displayoff(){
+            console.log("off Clicked");
+            document.getElementById('ontop').style.display='none';
+        }
+        function addproduct(name,price,product_id)
+        {
+            var signedFlag = localStorage.getItem('SignInFlag')?JSON.parse(localStorage.getItem('SignInFlag')):{};
+            console.log("signedFlag",signedFlag);
+            console.log("product id is:", product_id);
+            if(signedFlag.signIn==true)
+            {
+                console.log("add to product",name);
+                var productDetails=localStorage.orderdetails?JSON.parse(localStorage.getItem('orderdetails')):{};
+                var firstId='#'+name+"quantity";
+                var secondId= '#'+name+"cart";
+                var count=document.querySelector(firstId).value;
+                var div=document.querySelector(secondId);
+                if(div.innerHTML!="Added to Cart")
+                {   
+                    console.log("Click taken");
+                    div.innerHTML="Added to Cart";
+                    div.style.backgroundColor='lightgreen'
+                    div.style.fontSize='18px';
+                    var obj={'name':name, 'quantity':count, 'price':price, 'id':product_id};
+                    productDetails[name]=obj;
+                    var details=JSON.stringify(productDetails);
+                    localStorage.setItem('orderdetails',details);
+                
+                    let totalPrice=price*count;
+                    totalPrice=totalPrice.toFixed(2);
+                    let totalValue='$'+totalPrice;
+                    console.log("totalValue is: ", totalValue);
+                    let quantityValue=Number(count);
+                    let unitPrice = Number(price);
+                    unitPrice = unitPrice.toFixed(2);
+                    let unitValue='$'+ unitPrice;
+                    let data={
+                        "userName": signedFlag.email,
+                        "productId": product_id,
+                        "productName": name,
+                        "quantity": quantityValue,
+                        "unitPrice": unitValue,
+                        "totalPrice": totalValue
+                    }
+                    console.log("data is: ", data);
+
+                    fetch("shopData.php",{
+                        "method": "POST",
+                        "headers": {
+                            "Content-Type": "application/json; charset=utf-8"
+                        },
+                        "body": JSON.stringify(data) 
+                    }).then(function(response){
+                        console.log("received-response: ", response);
+                        return response.text();
+                    }).then(function(data){
+                        console.log("received-data: ", data);
+                    })
+            }
+            }
+            else
+            {
+                window.alert("Sign In required");
+            }
+
+        }
+        var kell='Kelloggs_Cereals';
+        var kellprice='10.15';
+        var kell_id=201;
+        var bottle='Milton_Water_Bottle';
+        var bottleprice='19.75';
+        var bottle_id=203;
+        var bis='Nutritious_Biscuits';
+        var bisprice='6.35'
+        var bis_id=205;
+        
+        var choco='Chocolate_Pack';
+        var chocoprice='5.15';
+        var choco_id=305;
+        var gem='Cadbury_Gems';
+        var gemprice='5.85';
+        var gem_id=307;
+        var geo='Geometry_Box_Pack';
+        var geoprice='9.35';
+        var geo_id=309;
+
+
+        var lays='Lays_Chips';
+        var laysprice='4.75';
+        var lays_id=409;
+        var bag='Urban_Carrier_Bag';
+        var bagprice='49.15';
+        var bag_id=413;
+        var col='Acrylic_Colors_Pack';
+        var colprice='25.95'
+        var color_id=425;
+      
+        function shopdisplay(){
+            localStorage.removeItem('orderdetails');
+        }
+
+    </script>
+</head>
+<body onload={shopdisplay()}>
+    <div class="shoppage">
+        <div class="panel">
+            <div class="homepageImg">
+                <a href="../source/home.html"><img class="homeimg" src="../images/homepageimg.png" alt=""></a>
+            </div>
+            <div class="bar"> 
+                <a class="order" href="../source/shop.html">Shop
+                    <div class="underline" id="orderline"></div>
+                </a>
+                <a class="feedback" href="../source/feedback.html">Feedback
+                    <div class="feedunderline" id="feedline"></div>
+                </a>
+                <a class="about" href="../source/about.html">About
+                    <div class="aboutunderline" id="aboutline"></div>
+                </a>
+                <a class="signin"  href="../source/signin.html">Sign In</a>
+                <div class="menuimage">
+                    <img onclick={displaytop()} src="../images/menu.png" alt="">
+                </div>
+            </div>
+        </div>
+        <div class="content" id="KelloggsCART">
+          <div class="card">
+            <div class="cardimg">
+                <img src="../images/cereals.jpg" alt="">
+                <div class="quantity">
+                    <div class="role">
+                        <label for="Role">Quantity:</label>
+                        <select name="apply" class="userRole" id="Kelloggs_Cerealsquantity">
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="carddata">
+                <div class="cardname">Kelloggs Cereals</div>
+                <div class="cardprice">$10.15</div>
+                <div class="buybutton">
+                    <div class="addcart" id="Kelloggs_Cerealscart" onclick={addproduct(kell,kellprice,kell_id)}>Add to Cart</div>
+                </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="cardimg">
+                <img src="../images/bottle.jpg" alt="">
+                <div class="quantity">
+                    <div class="role">
+                        <label for="Role">Quantity:</label>
+                        <select name="apply" class="userRole" id="Milton_Water_Bottlequantity">
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="carddata">
+                <div class="cardname">Milton Water Bottle</div>
+                <div class="cardprice">$19.75</div>
+                <div class="buybutton">
+                    <div class="addcart" id="Milton_Water_Bottlecart" onclick={addproduct(bottle,bottleprice,bottle_id)}>Add to Cart</div>
+                </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="cardimg">
+                <img src="../images/biscuits.webp" alt="">
+                <div class="quantity">
+                    <div class="role">
+                        <label for="Role">Quantity:</label>
+                        <select name="apply" class="userRole" id="Nutritious_Biscuitsquantity">
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="carddata">
+                <div class="cardname">Nutritious Biscuits</div>
+                <div class="cardprice" price="Nutritious_Biscuitsprice">$6.35</div>
+                <div class="buybutton">
+                    <div class="addcart" id="Nutritious_Biscuitscart" onclick={addproduct(bis,bisprice,bis_id)}>Add to Cart</div>
+                </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="cardimg">
+                <img src="../images/chocolate.jpg" alt="">
+                <div class="quantity">
+                    <div class="role">
+                        <label for="Role">Quantity:</label>
+                        <select name="apply" class="userRole" id="Chocolate_Packquantity">
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="carddata">
+                <div class="cardname">Chocolate Pack</div>
+                <div class="cardprice">$5.15</div>
+                <div class="buybutton">
+                    <div class="addcart" id="Chocolate_Packcart"  onclick={addproduct(choco,chocoprice,choco_id)}>Add to Cart</div>
+                </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="cardimg">
+                <img src="../images/gems.webp" alt="">
+                <div class="quantity">
+                    <div class="role">
+                        <label for="Role">Quantity:</label>
+                        <select name="apply" class="userRole" id="Cadbury_Gemsquantity">
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="carddata">
+                <div class="cardname">Cadbury Gems</div>
+                <div class="cardprice">$5.85</div>
+                <div class="buybutton">
+                    <div class="addcart" id="Cadbury_Gemscart"  onclick={addproduct(gem,gemprice,gem_id)}>Add to Cart</div>
+                </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="cardimg">
+                <img src="../images/geometry.jpeg" alt="">
+                <div class="quantity">
+                    <div class="role">
+                        <label for="Role">Quantity:</label>
+                        <select name="apply" class="userRole" id="Geometry_Box_Packquantity">
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="carddata">
+                <div class="cardname">Geometry Box Pack</div>
+                <div class="cardprice">$9.35</div>
+                <div class="buybutton">
+                    <div class="addcart" id="Geometry_Box_Packcart"  onclick={addproduct(geo,geoprice,geo_id)}>Add to Cart</div>
+                </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="cardimg">
+                <img src="../images/lays.jpg" alt="">
+                <div class="quantity">
+                    <div class="role">
+                        <label for="Role">Quantity:</label>
+                        <select name="apply" class="userRole" id="Lays_Chipsquantity">
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="carddata">
+                <div class="cardname">Lays Chips</div>
+                <div class="cardprice">$4.75</div>
+                <div class="buybutton">
+                    <div class="addcart" id="Lays_Chipscart"  onclick={addproduct(lays,laysprice,lays_id)}>Add to Cart</div>
+                </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="cardimg">
+                <img src="../images/bags.jpg" alt="">
+                <div class="quantity">
+                    <div class="role">
+                        <label for="Role">Quantity:</label>
+                        <select name="apply" class="userRole" id="Urban_Carrier_Bagquantity">
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="carddata">
+                <div class="cardname">Urban Carrier Bag</div>
+                <div class="cardprice">$49.15</div>
+                <div class="buybutton">
+                    <div class="addcart" id="Urban_Carrier_Bagcart"  onclick={addproduct(bag,bagprice,bag_id)}>Add to Cart</div>
+                </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="cardimg">
+                <img src="../images/colorspack.webp" alt="">
+                <div class="quantity">
+                    <div class="role">
+                        <label for="Role">Quantity:</label>
+                        <select name="apply" class="userRole" id="Acrylic_Colors_Packquantity">
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="carddata">
+                <div class="cardname">Acrylic Colors Pack</div>
+                <div class="cardprice">$25.95</div>
+                <div class="buybutton">
+                    <div class="addcart" id="Acrylic_Colors_Packcart"  onclick={addproduct(col,colprice,color_id)}>Add to Cart</div>
+                </div>
+            </div>
+          </div>
+        </div>
+        <div class="button">
+            <div class="place">
+                <a href="../source/order.html" class="placeorder">Place Order</a></div>
+        </div>
+        <div id="ontop" class="topoptions">
+            <div class="options">
+                <a class="navigate" href="../source/shop.html">Shop</a>
+                <a class="navigate" href="../source/feedback.html">Feedback</a>
+                <a class="navigate" href="../source/about.html">About</a>
+                <a class="navigate" href="../source/signin.html">SignIn</a>
+            </div>
+            <div class="cancel">
+                <img class="cancelimg" onclick={displayoff()}  src="../images/cancel.png" alt="">
+            </div>
+        </div>
+    </div>
+</body>
+</html>

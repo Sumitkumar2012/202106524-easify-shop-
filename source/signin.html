@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SignIn</title>
+    <link rel="stylesheet" href="../styles/signIn.css">
+    <script>
+    
+     function checkemail(email)
+     {
+        let ch=0;
+        let ct=0;
+        for(let i=0;i<email.length;i++)
+        {
+            if(email[i]=='@')
+            {
+                ct++;
+            }
+            if(email[i]=='.')
+            {
+                ch++;
+            }
+        }
+        if(ch==1 && ct==1)
+        return true;
+
+        return false;
+     }
+     function registerClick(){
+       var email=document.getElementById('emailId').value;
+       var passkey=document.getElementById('passId').value;
+       console.log("Click taken email, passkey", email, passkey);
+       
+        if(email!=='' && passkey!=='' && checkemail(email))
+        {
+            var signedFlag = localStorage.getItem('SignInFlag')?JSON.parse(localStorage.getItem('SignInFlag')):{};
+            signedFlag.signIn=true;
+            signedFlag.email=email;
+            var flag=JSON.stringify(signedFlag);
+            localStorage.setItem('SignInFlag', flag);
+            console.log("flag",flag);
+            window.alert("Signed In Successfully \n\nYou can navigate to home page to order something!!");
+
+            let data={
+                    "userName": email,
+                    "passKey": passkey
+                }
+                console.log("data is: ", data);
+
+                fetch("signinData.php",{
+                    "method": "POST",
+                    "headers": {
+                        "Content-Type": "application/json; charset=utf-8"
+                    },
+                    "body": JSON.stringify(data) 
+                }).then(function(response){
+                    console.log("received-response: ", response);
+                    return response.text();
+                }).then(function(data){
+                    console.log("received-data: ", data);
+                })
+        }
+        else
+        window.alert("Please enter correct credentials");
+
+     }
+     function display(){
+        var passValue=document.getElementById('passId').value;
+        console.log("passValue",passValue);
+     }
+    </script>
+</head>
+<body >
+    <div class="signinpage">
+    <div class="panel">
+        <div class="homepageImg">
+            <a href="../source/home.html"><img class="homeimg" src="../images/homepageimg.png" alt=""></a>
+        </div>
+        <div class="logoimg">
+            <div class="logo">easifyShop</div>
+            <img src="../images/logo.jpg" alt="">
+        </div> 
+    </div>
+    <div class="content">
+    <div class="title">
+        <h1>Registration Form</h1>
+    </div>
+    <div class="htmlform">
+        <form action="">
+            <div class="yourname">
+                <input id="emailId" class="nameInput" type="text" name="Username" placeholder="Enter your Email Address" autofocus>
+            </div>
+            <div class="password">
+                <input id="passId" class="passInput" type="password" name="passwordInput" onchange={display()} placeholder="Enter your password">
+            </div>
+            <div class="buttons">
+                <div class="register" onClick={registerClick()}>Register</div>
+            </div>
+        </form>
+    </div>
+</div>
+</div>
+</body>
+</html>

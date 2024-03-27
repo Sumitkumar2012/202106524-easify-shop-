@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About</title>
+    <link rel="stylesheet" href="../styles/aboutPage.css">
+</head>
+<script>
+       function displaytop(){
+            console.log("on Clicked");
+            document.getElementById('ontop').style.display='flex';
+            document.getElementById('ontop').style.flexDirection='row';
+            document.getElementById('ontop').style.justifyContent='space-between';
+        }
+        function displayoff(){
+            console.log("off Clicked");
+            document.getElementById('ontop').style.display='none';
+        }
+</script>
+<body>
+    <div class="aboutpage">
+    <div class="panel">
+        <div class="homepageImg">
+            <a href="../source/home.html"><img class="homeimg" src="../images/homepageimg.png" alt=""></a>
+        </div>
+        <div class="bar"> 
+            <a class="order" href="../source/shop.html">Shop
+                <div class="underline" id="orderline"></div>
+            </a>
+            <a class="feedback" href="../source/feedback.html">Feedback
+                <div class="feedunderline" id="feedline"></div>
+            </a>
+            <a class="about" href="../source/about.html">About
+                <div class="aboutunderline" id="aboutline"></div>
+            </a>
+            <a class="signin"  href="../source/signin.html">Sign In</a>
+            <div class="menuimage">
+                <img onclick={displaytop()} src="../images/menu.png" alt="">
+            </div>
+        </div>
+    </div>
+    <div class="aboutcontent">
+        <div class="upper">
+            <div class="maintext">Welcome to <span class="name">easifyShop</span>, your go-to destination for essential products. At <span class="name">easifyShop</span>, we believe in quality products and timely delivery of them.</div>
+            <div class="subtext">At <span class="name">easifyShop</span>, we stand out for accessible and feasible products. Whether it's our handpicked selection of products, dedication to quality, or our customer-centric approach, we strive to exceed your expectations.</div>
+            <div class="mission">Our mission is to provide high-quality products that enhance your experience while maintaining a commitment to environmental sustainability.</div>
+            </div>
+        <div class="lower">
+            <div class="connect">
+                We love hearing from our customers! Feel free to reach out to us through feedback form. Stay updated on the latest product releases.
+            </div>
+            <div class="thanks">Thank you for choosing <span class="name">easifyShop</span>. We appreciate your trust and look forward to being a part of your routine.</div>
+        </div>
+    </div>
+    <div id="ontop" class="topoptions">
+        <div class="options">
+            <a class="navigate" href="../source/shop.html">Shop</a>
+            <a class="navigate" href="../source/feedback.html">Feedback</a>
+            <a class="navigate" href="../source/about.html">About</a>
+            <a class="navigate" href="../source/signin.html">SignIn</a>
+        </div>
+        <div class="cancel">
+            <img class="cancelimg" onclick={displayoff()}  src="../images/cancel.png" alt="">
+        </div>
+    </div>
+</div>
+</body>
+</html>

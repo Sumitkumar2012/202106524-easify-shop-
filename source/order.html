@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order</title>
+    <link rel="stylesheet" href="../styles/orderPage.css">
+    <script>
+        var table;
+        var sum=0.00;
+        var Kelloggs_Cereals="Kelloggs_Cereals";
+        var Chocolate_Pack="Chocolate_Pack";
+        var Milton_Water_Bottle="Milton_Water_Bottle";
+        var Cadbury_Gems="Cadbury_Gems";
+        var Nutritious_Biscuits="Nutritious_Biscuits";
+        var Geometry_Box_Pack="Geometry_Box_Pack";
+        var Acrylic_Colors_Pack="Acrylic_Colors_Pack";
+        var Urban_Carrier_Bag="Urban_Carrier_Bag";
+        var Lays_Chips="Lays_Chips";
+        var deletionKey="";
+      function loadcontent(){
+        deletionKey="";
+        document.getElementById('popup-background').style.display='none';
+        document.getElementById('remove-popup').style.display='none';
+        var signedFlag = localStorage.getItem('SignInFlag')?JSON.parse(localStorage.getItem('SignInFlag')):{};
+        if(signedFlag.signIn==false)
+        {
+            window.alert("Sign In required");
+        }
+        else
+        {
+            var data=localStorage.orderdetails?JSON.parse(localStorage.getItem('orderdetails')):{};
+            console.log(data);
+            table='<div class="title">Order Details</div>'
+            table += '<table class="htmltable">';  
+            table += '<tr><th class="heading">Product Id</th><th class="heading">Product Name</th><th class="heading">Quantity Ordered</th><th class="heading">Unit Price</th><th class="heading">Total Item Price</th><th class="heading">Remove Product</th></tr>';  
+            for(let key in data)
+            {
+               console.log(key);
+               let unitCost='$'+data[key].price;
+               let value=data[key].price*(data[key].quantity);
+               value=value.toFixed(2);
+               sum=sum+Number(value);
+               let totalValue='$'+value;
+               table += `<tr><td class="data">${data[key].id}</td><td class="data">${data[key].name}</td><td class="data">${data[key].quantity}</td><td class="data">${unitCost}</td><td class="data">${totalValue}</td><td class="data"><img class="removeImage" src="../images/remove.png" onclick=removePopup(${key})></img></td></tr>`;
+            }
+        
+           table += '</table>';  
+           console.log(table);
+           if(sum!=0)
+           {    
+                console.log(sum);
+                sum=Math.round(sum*100)/100;
+                console.log(sum);
+                sum='Pay $'+sum;
+                window.setTimeout(function(){
+                    var div= document.querySelector('.content');
+                            console.log(div);
+                            div.innerHTML=table;
+                    var paydiv=document.querySelector('.pay');
+                    paydiv.innerHTML=sum;
+                    paydiv.style.display='block';
+                    document.getElementById('deliverInput').style.display='block';
+                },500)
+            }
+            else
+            {   
+                window.alert('Please add items to your cart');
+                window.setTimeout(function(){
+                    var div= document.querySelector('.content');
+                            div.innerHTML='Your cart is Empty<br>Please add items to your cart<br><a class="shopping" href="../source/shop.html">Shop</a>';
+                },500)
+                
+            }
+           
+        }
+      }
+      function paymentReceive()
+      {
+         var value=document.getElementById('deliverInput').value;
+         var count=0;
+         for(let i=0;i<value.length;i++)
+         {
+            if(value[i]==' ')
+            count++;
+         }
+         if(count==value.length)
+         value='';
+
+         if(value=='')
+         {
+            window.alert('Enter your delivery address\nThen proceed to pay');
+         }
+         else
+         {      
+            var signedFlag = localStorage.getItem('SignInFlag')?JSON.parse(localStorage.getItem('SignInFlag')):{};
+            
+            var localdata=localStorage.orderdetails?JSON.parse(localStorage.getItem('orderdetails')):{};
+             
+            for(let key in localdata)
+            {
+
+
+
+            let  totalPrice=localdata[key].price*localdata[key].count;
+                    totalPrice=totalPrice.toFixed(2);
+                    let totalValue='$'+totalPrice;
+                    console.log("totalValue is: ", totalValue);
+                    let quantityValue=Number(localdata[key].count);
+                    let unitPrice = Number(localdata[key].price);
+                    unitPrice = unitPrice.toFixed(2);
+                    let unitValue='$'+ unitPrice;
+                    let data={
+                        "userName": signedFlag.email,
+                        "productId": localdata[key].product_id,
+                        "productName": localdata[key].name,
+                        "quantity": quantityValue,
+                        "unitPrice": unitValue,
+                        "totalPrice": totalValue
+                    }
+                    console.log("data is: ", data);
+
+                    fetch("shopData.php",{
+                        "method": "POST",
+                        "headers": {
+                            "Content-Type": "application/json; charset=utf-8"
+                        },
+                        "body": JSON.stringify(data) 
+                    }).then(function(response){
+                        console.log("received-response: ", response);
+                        return response.text();
+                    }).then(function(data){
+                        console.log("received-data: ", data);
+                    })
+                }
+            
+
+
+
+            window.alert('Payment Received\nOrder will be delivered soon!!');
+            localStorage.removeItem('orderdetails');
+            document.getElementById('deliverInput').style.display='none';
+            document.querySelector('.content').innerHTML='Order Placed!!';
+            document.querySelector('.pay').style.display='none';
+         }
+      }
+      function removePopup(key){
+        console.log("remove popup is clicked ", key);
+        deletionKey=key;
+        document.getElementById('popup-background').style.display='flex';
+        document.getElementById('remove-popup').style.display='block';
+      }
+      function cancelPopup(){
+        console.log("cancel popup is clicked ");
+        deletionKey="";
+        document.getElementById('popup-background').style.display='none';
+        document.getElementById('remove-popup').style.display='none';
+      }
+      function reloadOrder(){
+         if(deletionKey!="")
+         {
+            console.log("deletionKey is:", deletionKey);
+            var data=localStorage.orderdetails?JSON.parse(localStorage.getItem('orderdetails')):{};
+            delete data[deletionKey];
+            console.log("final data is: ", data);
+            localStorage.setItem('orderdetails',JSON.stringify(data));
+            deletionKey="";
+            document.getElementById('popup-background').style.display='none';
+            document.getElementById('remove-popup').style.display='none';
+            location.reload();
+         }
+      }
+    </script>
+</head>
+<body onload={loadcontent()}>
+     <div class="orderpage">
+        <div class="popupBackground" id="popup-background">
+            <div class="removepopup" id="remove-popup">
+            <div class="popuptitle">Do you want to remove this product?</div>
+            <div class="popupbuttons">
+            <div class="leftbutton" onclick={cancelPopup()}>Cancel</div>
+            <div class="rightbutton" onclick={reloadOrder()}>Confirm</div>
+        </div>
+        </div>
+        </div>
+        <div class="panel">
+            <div class="homepageImg">
+                <a href="../source/home.html"><img class="homeimg" src="../images/homepageimg.png" alt=""></a>
+            </div>
+            <div class="logoimg">
+                <div class="logo">easifyShop</div>
+                <img src="../images/logo.jpg" alt="">
+            </div> 
+        </div>
+        <div class="content">
+        </div>
+        <div class="buttons">
+            <input class="deliver" id="deliverInput" type="text" placeholder="Enter shipping address">
+            <div class="pay" onclick={paymentReceive()}></div>
+        </div>
+    </div>
+</body>
+</html>

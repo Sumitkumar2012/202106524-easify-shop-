@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../styles/homePage.css">
+    <link rel="import" href="../source/signin.html">
+    <title>easifyShop</title>
+    <script>
+        function displaytop(){
+            console.log("on Clicked");
+            document.getElementById('ontop').style.display='flex';
+            document.getElementById('ontop').style.flexDirection='row';
+            document.getElementById('ontop').style.justifyContent='space-between';
+        }
+        function displayoff(){
+            console.log("off Clicked");
+            document.getElementById('ontop').style.display='none';
+        }
+    </script>
+</head>
+<body>
+    <div class="homepage">
+        <div class="panel">
+            <div class="logoimg">
+                <div class="logo">easifyShop</div>
+                <img src="../images/logo.jpg" alt="">
+            </div> 
+            <div class="bar"> 
+                    <a class="order" href="../source/shop.html">Shop
+                        <div class="underline" id="orderline"></div>
+                    </a>
+                    <a class="feedback" href="../source/feedback.html">Feedback
+                        <div class="feedunderline" id="feedline"></div>
+                    </a>
+                    <a class="about" href="../source/about.html">About
+                        <div class="aboutunderline" id="aboutline"></div>
+                    </a>
+                    <a class="signin"  href="../source/signin.html">Sign In</a>
+                    <div class="menuimage">
+                        <img  onclick={displaytop()} src="../images/menu.png" alt="">
+                    </div>
+            </div>
+        </div>
+        <div class="content" >
+            <div class="left">
+                <div class="maintext">Get Your <span class="essential">Essentials</span> Anytime</div>
+                <div class="text">Free Delivery</div>
+                <div class="subtext">Your Style, Your Click: Elevate Your Shopping Experience Online</div>
+            </div>
+            <div class="right">
+                <img src="../images/homeImage.jpg" alt="">
+            </div>
+           
+        </div>
+        <div id="ontop" class="topoptions">
+            <div class="options">
+                <a class="navigate" href="../source/shop.html">Shop</a>
+                <a class="navigate" href="../source/feedback.html">Feedback</a>
+                <a class="navigate" href="../source/about.html">About</a>
+                <a class="navigate" href="../source/signin.html">SignIn</a>
+            </div>
+            <div class="cancel">
+                <img class="cancelimg" onclick={displayoff()}  src="../images/cancel.png" alt="">
+            </div>
+        </div>
+    </div>
+</body>
+</html>
